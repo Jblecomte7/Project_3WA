@@ -1,0 +1,59 @@
+<main>
+    <?php if (is_connected()) : ?>
+        <section>
+            <p>Actuellement connecté(e) : <?= $userFirstName . ' ' . $userName ?></p>
+            <p>Nous sommes le <?= $date ?>.</p>
+        </section>
+    <?php endif; ?>
+    <section class="home__newsletter">
+            <h2>Newsletter</h2>
+            <p>Je souhaite m'abonner à la newsletter :</p>
+            <form class="form" action="#" method="POST">
+                <input class="form__input" type="email" name="email">
+                <button class="btn" type="submit">Valider</button>
+            </form>
+            <?php if (isset($success)) : ?>
+                <p class="success">Votre inscription est prise en compte !</p>
+            <?php endif; ?>
+            <?php if (!empty($errors)) : ?>
+                <div class="alert__displayer">
+                    <p>Les erreurs suivantes ont été détectées : </p>
+                    <ul>
+                        <?php foreach ($errors as $error) : ?>
+                            <li><?= $error; ?></li>
+                        <?php endforeach; ?>
+                    </ul>
+                </div>
+            <?php endif; ?>
+    </section>
+    <section class="home__testimonial swiper mySwiper">
+        <h1>Les retours de nos clients</h1>
+        <div class="swiper mySwiper">
+            <div class="swiper-wrapper">
+                <div class="swiper-slide">
+                    <img src="./vendor/images/generic-profil-f.png" alt="Avis client">
+                    <div>
+                        <p class="testimonial-text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam, rem?</p>
+                        <p class="testimonial-author">Lorem Ipsum - Designer</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="./vendor/images/generic-profil-h.png" alt="Avis client">
+                    <div>
+                        <p class="testimonial-text">C'est propre et soigné. Merci !</p>
+                        <p class="testimonial-author">Anthony C. - Développeur web</p>
+                    </div>
+                </div>
+                <div class="swiper-slide">
+                    <img src="./vendor/images/generic-profil-f.png" alt="Avis client">
+                    <div>
+                        <p class="home__testimonial--text">Lorem ipsum dolor sit, amet consectetur adipisicing elit. Quisquam, rem?</p>
+                        <p class="home__testimonial--author">Lorem Ipsum - Designer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="swiper-button-next"></div>
+            <div class="swiper-button-prev"></div>
+        </div>
+    </section>
+</main>

@@ -1,0 +1,55 @@
+<?php
+$loginForm = new FormContact($formLabel, $type, $className);
+?>
+
+<main>
+    <div class="login__main">
+        <h1 class="title">Se connecter</h1>
+
+        <?php if (!empty($errors)) : ?>
+            <div class="alert__displayer">
+                <p>Les erreurs suivantes ont été détectées : </p>
+                <ul>
+                    <?php foreach ($errors as $error) : ?>
+                        <li><?= $error; ?></li>
+                    <?php endforeach; ?>
+                </ul>
+            </div>
+        <?php endif; ?>
+
+        <form class="form" action="#" onSubmit="return false" method="POST">
+            <div>
+                <?= $loginForm->input('email', 'email', 'inputClass') ?>
+            </div>
+            <div>
+                <?= $loginForm->input('password', 'password', 'inputClass') ?>
+            </div>
+            <!-- <?php //$loginForm->submit() 
+                    ?> -->
+            <input id="connecttoi" class="btn" type="button" value="Valider">
+        </form>
+
+        <h1 class="title">Pas encore inscrit ?</h1>
+        <a title="Se connecter" class="btn btn--connect" href="./index.php?page=Register">S'inscrire</a>
+    </div>
+</main>
+<script>
+    document.getElementById('connecttoi').onclick = function() {
+        $.ajax({
+                type: "POST",
+                url: '/ajax/testLogin.php',
+                secureuri: false,
+                dataType: 'json',
+                data: {
+                    "email": document.getElementById('email').value,
+                    "password": document.getElementById('password').value
+                }
+            })
+            .done(function(data, status) {
+                if (data.error != 0) alert("ya un pb : " + data.msg);
+                else document.location.href = "/index.php?page=Account&id=" + data.id;
+            });
+
+
+    };
+</script>

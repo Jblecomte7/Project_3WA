@@ -1,0 +1,214 @@
+<main>
+<style>
+a{ cursor:pointer}
+div#alertZone,div#successZONE{display:none;}
+div#bgmask{position:fixed; top:0px; left:0px; width:100%; height:100%; background-color: rgba(158,158,158,0.5); display:none; z-index: 199}
+form, input{z-index: 2;}
+</style>
+   
+	<div id="bgmask"></div>
+   
+    <div class="account__welcome">
+        <h1>Hello <?= $userFirstName ?> !</h1>
+        <p>Modifiez en toute liberté vos informations de contact, ainsi que votre votre adresse de livraison.</p>
+    </div>
+    <div>
+        <p class="alert__displayer"><i class="fa-solid fa-triangle-exclamation"></i> Votre nom, votre prénom et votre adresse mail ne sont pas modifiables. <i class="fa-solid fa-triangle-exclamation"></i></p>
+    </div>
+
+    
+        <div id="alertZone" class="alert__displayer" >            
+        </div>
+    
+
+    
+        <div id="successZONE" class="success" >            
+        </div>
+    
+        
+    
+
+    <section class="bg--alt user__infos">
+        <h2>Mes informations</h2>
+        <a title="Mes informations personnelles" id="accountInfo" onClick="$('#accountAddressDetails').show();">
+            <p><i class="fa-solid fa-circle-right"></i> Mes informations personnelles</p>
+        </a>
+        <article id="accountDetails" class="form--display">
+            <form id="formAccountDetails" class="form" method="POST" onSubmit="return false">
+                <div>
+                    <label class="form__label" for="name"><i class="fa-solid fa-circle-right"></i> Nom</label>
+                    <input class="form__input" type="text" name="name" id="name" value="<?= $userName ?>" readonly>
+                </div>
+                <div>
+                    <label class="form__label" for="firstname"><i class="fa-solid fa-circle-right"></i> Prénom</label>
+                    <input class="form__input" type="text" name="firstname" id="firstname" value="<?= $userFirstName ?>" readonly>
+                </div>
+                <div>
+                    <label class="form__label" for="email"><i class="fa-solid fa-at"></i> Email</label>
+                    <input class="form__input" type="email" name="email" id="email" value="<?= $userEmail ?>" readonly>
+                </div>
+                <h4>Informations complémentaires (modifiables)</h4>
+                <div>
+                    <label class="form__label" for="email"><i class="fa-solid fa-key"></i> Mot de passe actuel (à renseigner en cas de changement de mot de passe)</label>
+                    <input class="form__input" type="password" name="actualPassword" id="actualPassword">
+                </div>
+                <div>
+                    <label class="form__label" for="email">Nouveau mot de passe</label>
+                    <input class="form__input" type="password" name="password" id="password">
+                </div>
+                <div>
+                    <label class="form__label" for="tel"><i class="fa-solid fa-phone"></i> Numéro de téléphone</label>
+                    <input class="form__input" type="tel" name="tel" id="tel" value="<?= $userPhone ?>">
+                </div>
+                <div>
+                    <label class="form__label" for="birth"><i class="fa-solid fa-cake-candles"></i> Date de naissance</label>
+                    <input class="form__input" type="date" name="birth" id="birth" value="<?= $userBirth ?>">
+                </div>
+                <button id="formAccountDetailsSubmit" class="btn" type="button">Mettre à jour les informations</button>
+            </form>
+        </article>
+        <a title="Mon adresse" id="accountAddress" onClick="$('#accountAddressDetails').show();">
+            <p><i class="fa-solid fa-circle-right"></i> Mon adresse</p>
+        </a>
+        <article id="accountAddressDetails" class="form--display">
+            <form id="formAccountAddress" class="form" method="POST" onSubmit="return false">
+                <div>
+                    <label class="form__label" for="address">Adresse</label>
+                    <input class="form__input" type="text" name="address" id="address" value="<?= $userAddress ?>">
+                </div>
+                <div>
+                    <label class="form__label" for="cp">Code postal</label>
+                    <input class="form__input" type="text" name="cp" id="cp" value="<?= $userCP ?>">
+                </div>
+                <div>
+                    <label class="form__label" for="city">Ville</label>
+                    <input class="form__input" type="text" name="city" id="city" value="<?= $userCity ?>">
+                </div>
+                <button id="formAccountAddressSubmit" class="btn" type="button">Mettre à jour les informations</button>
+            </form>
+        </article>
+    </section>
+    <section class="bg--alt user__infos">
+        <h2>Mes commandes</h2>
+        <p><i class="fa-solid fa-circle-right"></i> Commandes passées</p>
+        <p><i class="fa-solid fa-circle-right"></i> Ma liste d'envies</p>
+        <?php foreach ($showFav as $fav) : ?>
+            <div class="cart__product" value="<?= $fav['id'] ?>">
+                <img class="cart__product__img" src="<?= $fav['image'][0] ?>" alt="Nom du produit">
+                <div class="cart__product__details">
+                    <h4><?= $fav['name'] ?></h4>
+                    <p><strong>Taille</strong> : <?= $fav['size'] ?>
+                    <p><strong>Prix</strong> : <?= $fav['price'] ?> €</p>
+                </div>
+                <div class="cart__product__btn">
+                    <form action="#" method="post">
+                        <input type="hidden" name="confirmer" value="<?= $fav['id'] ?>">
+                        <button title="Supprimer" class="btn--delete" type="submit"><i class="fa-solid fa-trash-can"></i></button>
+                    </form>
+                    <a title="Ajouter au panier" href="./index.php?page=Produits&modal=<?= $fav['id'] ?>&addToCart=<?= $fav['id'] ?>"><i class="btn--addToCart fa-solid fa-cart-plus"></i></a>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </section>
+</main>
+<script>
+
+function execUpdate(formID) {
+
+	// faire un objet JSON avec les données du formulaire
+	let uncleandata = $('#'+formID).serializeArray();
+	let dataToSend = {};
+	uncleandata.forEach(item=>{
+  		dataToSend[item.name] = item.value;
+		});
+	
+	// APPELER le fichier pour enregistrer les valeurs
+	$.ajax({
+		type:"POST",
+		url:'/ajax/updateAccount.php',
+		secureuri:false,
+		dataType:'json',
+		data:dataToSend
+		})
+		.done(function(data, status){
+			
+			// raisonnablement, il faudrait tester le "status" pour svoir si l'appel s'est bien passé ou pas
+			if (status!='success') alert('ya une mouche dans le lait : '+status); 
+		
+			// on reçoit ici un tableau avec des objets
+			var errors=""; // réserver une variable pour additionner les erreurs
+			var success=""; // réserver une variable pour additionner les success
+		
+			// préparer les zone d'affichage des erreurs et success
+			$("#alertZone").hide();
+			$("#alertZone").html('<p>Les erreurs suivantes ont été détectées : </p><ul id="alertZoneUL"></ul>'); 
+		
+			$("#successZONE").hide();
+			$("#successZONE").html(''); //document.getElementById('successZONE').innerHTML="";
+		
+			// parcourir le tableau pour savoir ce qui n'a pas marché et ajouter le msg à la liste des erreurs
+			for (var i=0;i<data.length;i++) 
+				if (data[i].error!=0) {
+				
+				errors+=data[i].msg+"\n";
+				
+				// ajouter à la zone d'affichage des erreurs
+				_li=document.createElement('li');
+				_li.innerHTML=data[i].msg;
+				document.getElementById('alertZoneUL').appendChild(_li);
+				
+				}
+				else {
+					// ajouter les messages dans la zone success si necessaire
+					if (data[i].msg!='') {
+						success+=data[i].msg;	
+						_p=document.createElement('p');
+						_p.innerHTML=data[i].msg;
+						document.getElementById('successZONE').appendChild(_p);												
+					}
+				}
+			
+			// si ya success, les montrer sinon ne rien faire
+			if (success!='')  {
+				
+				
+				postop=($(window).height()-$("#successZONE").height())/2;
+				posleft=($(window).width()-$("#successZONE").width())/2;
+				
+				$("#successZONE").css("position","fixed");
+				$("#successZONE").css("z-index","200");
+				$("#successZONE").css("top",postop+"px");
+				$("#successZONE").css("left",posleft+"px");
+				
+				
+				$("#bgmask").show();
+				$("#successZONE").show();
+				
+				//$('html, body').animate({scrollTop: $("#successZONE").offset().top-200}, 500);
+				
+				// masquer la zone successZONE au bout de 2 secondes
+				setTimeout(function() {$('#successZONE').hide();$("#bgmask").hide();},4500);
+				}
+		
+			// si ya erreurs, les montrer sinon ne rien faire
+			if (errors!='') {
+				//alert(errors);
+				$('#alertZone').show();				
+				$('html, body').animate({scrollTop: $("#alertZone").offset().top-200}, 500);
+				
+				// masquer la zone alertZone au bout de 2 secondes
+				//setTimeout(function() {$('#alertZone').hide();},2500);	
+				}
+			
+			
+			});	// END done function
+	
+	
+} // END FUNCTION execUpdate
+	
+	
+document.getElementById('formAccountDetailsSubmit').onclick=function() {execUpdate('formAccountDetails')}; // END onclick=function
+document.getElementById('formAccountAddressSubmit').onclick=function() {execUpdate('formAccountAddress')}; // END onclick=function
+	
+	
+</script>

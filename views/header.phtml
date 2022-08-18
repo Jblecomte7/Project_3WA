@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>D'Frips & Vous</title>
+
+    <!-- Fonts imports -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bad+Script&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=PT+Serif&display=swap" rel="stylesheet">
+
+    <!-- CSS imports -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.css" type="text/css" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/swiper/swiper-bundle.min.css">
+    <link href='https://css.gg/dark-mode.css' rel='stylesheet'>
+    <link rel="stylesheet" href="./vendor/css/style.css">
+
+    <link rel="stylesheet" href="./css/ui-lightness-1.12.1/jquery-ui.min.css">
+
+    <!-- JS imports -->
+    <script src="https://unpkg.com/swiper/swiper-bundle.min.js"></script>
+
+    <script src="./js/jquery-2.2.4.js"></script>
+    <script src="./js/jquery-migrate-1.4.1.min.js"></script>
+    <script src="./js/jquery-ui-1.12.1.min.js"></script>
+    <script src="./vendor/js/script.js"></script>
+
+</head>
+
+<body>
+    <header>
+        <details class="menu menu--access">
+            <summary>Paramètres d'accessibilité</summary>
+            <div>
+                <a title="Mode sombre" id="dark-mode" class="menu__link" href="#">Activer le mode sombre | clair : <i class="gg-dark-mode"></i></a>
+            </div>
+            <div>
+                <span>Modifier la taille des caractères : </span>
+                <a title="Taille -" id="low-font" class="menu__link access--lowerFont" href="#"><i class="fa-solid fa-a"></i> | </a>
+                <a title="Taille d'origine" id="reset-font" class="menu__link access--normalFont" href="#"><i class="fa-solid fa-a"></i> | </a>
+                <a title="Taille +" id="high-font" class="menu__link access--higherFont" href="#"><i class="fa-solid fa-a"></i></a>
+            </div>
+        </details>
+        <div class="bg--primary header__top">
+            <div>
+                <a title="Logo DFrips&Vous" href="index.php"><img class="header__logo" src="./vendor/images/LOGO-BLANC-TOTAL.png" alt=""></a>
+            </div>
+            <div class="header__account">
+                <?php if (!is_connected()) : ?>
+                    <a title="S'inscrire" class="header__subscribe" href="index.php?page=Register">S'inscrire</a>
+                <?php endif; ?>
+                <a title="Mon compte" class="menu__link" href="index.php?page=Account"><i class="menu__icon fa-solid fa-user"></i></a>
+                <a title="Mon Panier" class="menu__link" href="index.php?page=MonPanier"><i class="menu__icon fa-solid fa-bag-shopping"></i>
+                    <span title="<?= (isset($userCart) && !empty($userCart) ? $totalProducts . " produits dans le panier" : "") ?>" class="products__counter"><?= (isset($userCart) && !empty($userCart) ? " " . $totalProducts : "") ?></span>
+                </a>
+
+                <?php
+                if (is_connected()) : ?>
+                    <a title="Déconnexion" href="./models/logout.php"><i class="menu__icon fa-solid fa-arrow-right-from-bracket"></i></a>
+                    <?php if (isset($_SESSION['role']) && strval($_SESSION['role']) === '1') : ?>
+                        <a title="Admin" class="menu__link" href="index.php?page=Admin" target="blank"><i class="menu__icon fa-solid fa-gear"></i></a>
+                    <?php endif; ?>
+                <?php endif; ?>
+            </div>
+        </div>
+        <nav class="menu navbar">
+            <a title="Accueil" class="menu__link" href="index.php?page=Accueil">Accueil</a>
+            <div class="menu__link menu__link--categories">
+                <a title="Nos produits" class="menu__link" href="index.php?page=Produits&cat=all">Nos produits <i class="fa-solid fa-arrow-down"></i></a>
+                <ul class="menu__products">
+                    <li title="Vêtements" class="bg--primary"><a href="./index.php?page=Produits&cat=Vetements">Vêtements</a></li>
+                    <li title="Chaussures" class="bg--primary"><a href="./index.php?page=Produits&cat=Chaussures">Chaussures</a></li>
+                    <li title="Accessoires" class="bg--primary"><a href="./index.php?page=Produits&cat=Accessoires">Accessoires</a></li>
+                </ul>
+            </div>
+            <a title="Nos services" class="menu__link" href="index.php?page=Services">Nos services</a>
+            <a title="Qui sommes-nous" class="menu__link" href="index.php?page=Apropos">Qui sommes nous ?</a>
+            <a title="Nous contacter" class="menu__link" href="index.php?page=Contact">Nous contacter</a>
+        </nav>
+        <button class="hamburger">Menu
+            <i class="menuIcon material-icons">menu</i>
+            <i class="closeIcon material-icons">close</i>
+        </button>
+    </header>

@@ -1,0 +1,172 @@
+<main>
+    <div class="main__products">
+        <aside class="products__asideFilter">
+            <section class="products__filterBox">
+                <details class="bg--primary" id="details">
+                    <summary>Filtrer</summary>
+                    <form id="productSearch" class="form" method="POST" onSubmit="return false">
+                       <input type="hidden" name="cat" value="<?= (isset($_GET['cat']) ? $_GET['cat'] : 'all') ?>">
+                        <div>
+                            <p><strong>Taille</strong></p>
+                            <input type="checkbox" name="XS">
+                            <label class="form__label" for="xs">XS</label>
+                            <input type="checkbox" name="S">
+                            <label class="form__label" for="s">S</label>
+                            <input type="checkbox" name="M">
+                            <label class="form__label" for="m">M</label>
+                            <input type="checkbox" name="L">
+                            <label class="form__label" for="l">L</label>
+                            <input type="checkbox" name="XL">
+                            <label class="form__label" for="xl">XL</label>
+                        </div>
+                        <div>
+                            <p><strong>Pointures</strong></p>
+                            <input type="checkbox" name="36">
+                            <label class="form__label" for="36">36</label>
+                            <input type="checkbox" name="37">
+                            <label class="form__label" for="37">37</label>
+                            <input type="checkbox" name="38">
+                            <label class="form__label" for="38">38</label>
+                            <input type="checkbox" name="39">
+                            <label class="form__label" for="39">39</label>
+                            <input type="checkbox" name="40">
+                            <label class="form__label" for="40">40</label>
+                            <input type="checkbox" name="41">
+                            <label class="form__label" for="41">41</label>
+                            <input type="checkbox" name="42">
+                            <label class="form__label" for="42">42</label>
+                            <input type="checkbox" name="43">
+                            <label class="form__label" for="43">43</label>
+                            <input type="checkbox" name="44">
+                            <label class="form__label" for="44">44</label>
+                        </div>
+                        <div class="products__filter--cat">
+                            <p><strong>Catégories</strong></p>
+                            <div>
+                                <input type="checkbox" name="Accessoires">
+                                <label class="form__label" for="Accessoires">Accessoires</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="Chaussures">
+                                <label class="form__label" for="Chaussures">Chaussures</label>
+                            </div>
+                            <div>
+                                <input type="checkbox" name="Vetements">
+                                <label class="form__label" for="Vetements">Vêtements</label>
+                            </div>
+                        </div>
+                        <button class="btn" type="button" onClick="callProducts();">Appliquer les filtres</button>
+                        <button class="btn btn--reset" type="submit">Réinitialiser les filtres</button>
+                    </form>
+                </details>
+            </section>
+        </aside>
+        <div class="products__cardsContainer">
+            <section class="products__cardsList">
+                
+            </section>
+        </div>
+    </div>
+</main>
+<script>
+function addToCart(id) {
+	//addToCart
+	$.ajax({
+		type:"POST",
+		url:'/ajax/addToCart.php',
+		secureuri:false,
+		dataType:'json',
+		data:{'addToCart':id}
+		})
+		.done(function(data, status){
+		
+		if (data.error!=0) alert('ca déconne -> '+data.msg);
+		//alert("ça le fait");
+		$('span.products__counter').attr('title',data.pancount+" produits dans votre panier");
+		$('span.products__counter').html(data.pancount);
+		
+		//products__counter 
+		//title et innerHTML
+	});
+}
+	
+function callProducts() {
+	// faire un objet JSON avec les données du formulaire
+	let uncleandata = $('#productSearch').serializeArray();
+	let dataToSend = {};
+	uncleandata.forEach(item=>{
+  		dataToSend[item.name] = item.value;
+		});
+	
+	// APPELER le fichier pour enregistrer les valeurs
+	$.ajax({
+		type:"POST",
+		url:'/ajax/listProduits.php',
+		secureuri:false,
+		dataType:'json',
+		data:dataToSend
+		})
+		.done(function(data, status){
+		
+			// raisonnablement, il faudrait tester le "status" pour svoir si l'appel s'est bien passé ou pas
+			if (status!='success') alert('ya une mouche dans le lait : '+status); 
+		
+			$('section.products__cardsList').html('');
+		
+		
+		
+			data.forEach(item=>{
+		
+			_div=document.createElement('div');
+			_div.className="product__card";
+		
+			_img=document.createElement('img');			
+			_img.setAttribute('alt',item.name);
+			_img.src=item.images[0];
+			_div.appendChild(_img);
+				
+			__div=document.createElement('div');
+			__div.className="product__card--description";
+				_h3=document.createElement('h3');
+				_h3.innerHTML=item.name;
+				__div.appendChild(_h3);
+				
+				_p=document.createElement('p');
+				_p.innerHTML="Catégorie : "+item.type;
+				__div.appendChild(_p);
+				
+				_p=document.createElement('p');
+				_p.innerHTML="Taille : "+item.size;
+				__div.appendChild(_p);
+				
+				_p=document.createElement('p');
+				_p.innerHTML=item.price+" €";
+				_p.className="product__card--price";
+				__div.appendChild(_p);
+				
+				_a=document.createElement('a');
+				_a.className="bg--primary menu__link";
+				_a.href="/index.php?page=Produits&modal="+item.id;
+				_a.innerHTML="Détails";
+				__div.appendChild(_a);
+				
+				_a=document.createElement('a');
+				_a.dataset.id=item.id;				
+				_a.onclick=function() {addToCart(this.dataset.id);}
+				
+				_a.innerHTML='<i class="btn--addToCart fa-solid fa-cart-plus"></i>';
+				_a.title="Ajouter au panier";
+				__div.appendChild(_a);
+			
+			_div.appendChild(__div);
+				
+			$('section.products__cardsList').get(0).appendChild(_div);
+				
+			});
+		
+		});
+}
+//--------------
+	
+callProducts();
+</script>

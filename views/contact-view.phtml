@@ -1,0 +1,32 @@
+<?php
+$form = new FormContact($formLabel, $type, $className);
+?>
+
+<main>
+
+    <div class="form__details">
+        <p>Si vous souhaitez prendre contact avec nous, veuillez compléter ce formulaire !</p>
+        <p class="alert__displayer">Tous les champs sont obligatoires</p>
+    </div>
+    <?php if ($formSent) : ?>
+        <div class="success">
+            <p>Votre message a bien été envoyé. Vous serez recontacté dans les plus brefs délais !</p>
+        </div>
+    <?php endif; ?>
+    <form class="form" action="#" method="POST">
+        <div>
+            <?= $form->input('name', 'text', 'inputClass') ?>
+        </div>
+        <div>
+            <?= $form->input('firstName', 'text', 'inputClass') ?>
+        </div>
+        <div>
+            <?= $form->input('email', 'email', 'inputClass') ?>
+        </div>
+        <div>
+            <?= $form->textarea('message', 'textarea', 'inputClass') ?>
+            <span id="caracteres">300 caratères maximum</span>
+        </div>
+        <?= $form->submit() ?>
+    </form>
+</main>

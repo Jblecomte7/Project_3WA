@@ -1,0 +1,29 @@
+<main>
+    <section class="cart__display">
+        <h2 class="title">Mon panier</h2>
+        <?php if (empty($cartProduct)) : ?>
+            <div class="cart__empty">
+                <p><i class="fa-solid fa-face-frown"></i></p>
+                <p>Votre panier est vide...</p>
+            </div>
+        <?php endif; ?>
+
+        <?php foreach ($cartProduct as $cart) : ?>
+            <article class="cart__product">
+                <img class="cart__product__img" src="<?= $cart['image'] ?>" alt="<?= $cart['name'] ?>">
+                <div class="cart__product__details">
+                    <h4><?= $cart['name'] ?></h4>
+                    <p>Taille : <?= $cart['size'] ?>
+                    <p>Prix : <?= $cart['price'] ?> €</p>
+                </div>
+                <form action="#" method="POST">
+                    <input type="hidden" name="confirmer" value="<?= $cart['id'] ?>">
+                    <button class="btn--delete" type="submit"><i class="fa-solid fa-trash-can"></i></button>
+                </form>
+            </article>
+        <?php endforeach; ?>
+        <section class="cart__payment">
+            <h3>Total : <?= $totalPrice ?> €</h3>
+        </section>
+    </section>
+</main>

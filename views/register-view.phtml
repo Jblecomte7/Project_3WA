@@ -1,0 +1,45 @@
+<main>
+    <h1 class="title">S'inscrire</h1>
+
+    <?php if (!empty($errors)) : ?>
+        <div class="alert__displayer">
+            <p>Les erreurs suivantes ont été détectées : </p>
+            <ul>
+                <?php foreach ($errors as $error) : ?>
+                    <li><?= $error; ?></li>
+                <?php endforeach; ?>
+            </ul>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($registerConfirm) : ?>
+        <div class="success">
+            <p>Votre inscription est validée !</p>
+        </div>
+    <?php endif; ?>
+
+    <form class="form" action="#" method="POST">
+        <div>
+            <label class="form__label" for="name">Nom</label>
+            <input class="form__input" type="text" name="name" id="name">
+        </div>
+        <div>
+            <label class="form__label" for="firstName">Prénom</label>
+            <input class="form__input" type="text" name="firstName" id="firstName">
+        </div>
+        <div>
+            <label class="form__label" for="email">Email</label>
+            <input class="form__input" type="email" name="email" id="email">
+        </div>
+        <div>
+            <label class="form__label" for="password">Mot de passe (8 à 32 caractères)</label>
+            <input class="form__input" type="password" name="password" id="password">
+        </div>
+        <button class="btn" type="submit">Valider l'inscription</button>
+    </form>
+
+    <div class="register__connect">
+        <h1 class="title">Déjà inscrit ?</h1>
+        <a title="Se connecter" class="btn btn--connect" href="./index.php?page=Login">Se connecter</a>
+    </div>
+</main>

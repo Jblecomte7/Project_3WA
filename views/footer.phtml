@@ -1,0 +1,143 @@
+<footer class="bg--primary">
+    <img class="footer__logo" src="./vendor/images/LOGO-BLANC-TOTAL.png" alt="Brand Logo">
+    <section>
+        <h4>Nous rejoindre sur les réseaux</h4>
+        <a class="menu__link" href=""><i class="menu__icon fa-brands fa-facebook-f"></i></a>
+        <a class="menu__link" href=""><i class="menu__icon fa-brands fa-instagram"></i></a>
+        <a class="menu__link" href=""><i class="menu__icon fa-brands fa-tiktok"></i></a>
+        <a class="menu__link" href=""><i class="menu__icon fa-brands fa-twitter"></i></a>
+    </section>
+    <section class="footer__infos">
+        <div class="footer__nav">
+            <a class="menu__link" href="index.php?page=Accueil">Accueil</a>
+            <a class="menu__link" href="index.php?page=Produits">Nos produits</a>
+            <a class="menu__link" href="index.php?page=Services">Nos services</a>
+            <a class="menu__link" href="index.php?page=APropos">Qui sommes nous ?</a>
+            <a class="menu__link" href="index.php?page=Contact">Nous contacter</a>
+        </div>
+        <div>
+            <h4>Nous retrouver</h4>
+            <address>
+                3 impasse des Pervenches<br />
+                44220 COUERON
+            </address>
+            <span>
+                07.78.54.14.26
+            </span>
+        </div>
+    </section>
+</footer>
+<script>
+//---------------------------------------------------------
+
+function createDialog() {
+    // CREER UNE BOITE DE DIALOGUE
+    if (!document.getElementById('dialog-confirm')) {
+
+        // SI id='dialog-confirm' N'EXISTE PAS DEJA
+
+        _dialog_confirm=document.createElement('div');
+        _dialog_confirm.id='dialog-confirm';
+
+        _dialog_confirm.title='';
+
+        _dialog_confirm.style='display:none; z-index:999999999; font-size:14px; font-size:1em;';
+
+        // CREER SPAN (id=dialogText) DANS P
+        // C'est la ou on pourra ajouter du texte explicatif
+
+        _p=document.createElement('p');
+        _span2=document.createElement('span');
+        _span2.id='dialogText';
+        _p.appendChild(_span2);
+        _dialog_confirm.appendChild(_p);
+        document.body.appendChild(_dialog_confirm);
+        }
+
+    }
+
+function showAlerts(msg,_title,naction) {
+
+    // FAIRE COMME alert('')
+    // title=entete de la boite
+    // msg=message de contenu
+    // naction = function à executer
+
+    if (!naction) naction=false;
+    if (!_title) _title='ERREUR';
+    createDialog();
+    mwidth=$(window).width();
+    if (mwidth>400) mwidth=400; else mwidth=mwidth-15;
+
+    if (typeof( naction ) == 'function') {
+
+        // ya une naction  valide
+
+        $("#dialogText").html('<ul>'+msg+'</ul>'); // dans un ul mais pas obligé
+        $("#dialog-confirm").dialog({
+            title:_title,
+            resizable: false,
+            height: "auto",
+            width: mwidth,
+            modal: true,
+            buttons: {
+                // BOUTON ANNULER : juste fermer la boite
+                Annuler: function() {
+                $( this ).dialog( "close" );
+                }
+            }
+            });
+
+        var buttonSet = $("#dialog-confirm").parent().find('.ui-dialog-buttonset');
+
+        // créer un bouton "continuer" pour executer l'action
+
+        var newButton = $('<button id="btnCatStore">Continuer</button>');
+        newButton.button().click(function () {
+            naction();
+            //$("#dialog-confirm").dialog( "close" ); // DOIT être dans la fonction naction pour fermer la boite de dialogue
+        });
+        buttonSet.append(newButton);
+        }
+        else
+        {
+
+        // yapa de naction valide :: c'est juste un message d'info
+
+        $("#dialogText").html('<ul>'+msg+'</ul>');
+        $("#dialog-confirm").dialog({
+            title:_title,
+            resizable: false,
+            height: "auto",
+            width: mwidth,
+            modal: true,
+            buttons: {
+                Fermer: function() {
+                $( this ).dialog( "close" );
+                }
+            }
+            });
+        }
+    return true;
+    }
+//--------------------------------------------------------------------------------------------------
+try{
+var elem=$('i.fa-arrow-right-from-bracket').get(0).parentNode;
+var tourl=elem.href;
+elem.removeAttribute('href');		
+elem.onclick=function() {
+	
+	showAlerts("Vous voulez vraiement nous quitter ?","Confirmation attendue",function() {
+
+	// action à executer.
+	// ça peut mm être de l'ajax
+	setTimeout(function() {document.location.href=tourl;},100); // executer avec un timeout pour laisser la possibilité de fermer la boite
+	$("#dialog-confirm").dialog( "close" ); // fermer la boite
+	}); 
+	
+}
+} catch(e) {}
+</script>
+</body>
+
+</html>
